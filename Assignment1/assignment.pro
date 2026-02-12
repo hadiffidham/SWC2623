@@ -58,7 +58,7 @@ load_students :-
     forall(member(row(ID, Name), Rows),
            assertz(student(ID, Name))),
     length(Rows, Count),
-    format('      ✓ Loaded ~d students~n', [Count]).
+    format('       Loaded ~d students~n', [Count]).
 
 % Load all enrollments with grades
 load_enrollments :-
@@ -72,7 +72,7 @@ load_enrollments :-
     forall(member(row(SID, Code, Grade), Rows),
            assertz(enrollment(SID, Code, Grade))),
     length(Rows, Count),
-    format('      ✓ Loaded ~d enrollment records~n', [Count]).
+    format('       Loaded ~d enrollment records~n', [Count]).
 
 % Load all prerequisites
 load_prerequisites :-
@@ -86,7 +86,7 @@ load_prerequisites :-
     forall(member(row(Course, Prereq), Rows),
            assertz(prerequisite(Course, Prereq))),
     length(Rows, Count),
-    format('      ✓ Loaded ~d prerequisite rules~n', [Count]).
+    format('       Loaded ~d prerequisite rules~n', [Count]).
 
 % Load graduation requirements
 load_requirements :-
@@ -100,7 +100,7 @@ load_requirements :-
     forall(member(row(Course), Rows),
            assertz(required_course(Course))),
     length(Rows, Count),
-    format('      ✓ Loaded ~d graduation requirements~n', [Count]).
+    format('       Loaded ~d graduation requirements~n', [Count]).
 
 % Load ALL data from MySQL
 load_all :-
@@ -196,62 +196,51 @@ top_student(StudentID, Name, MaxAvg) :-
 
 % List all students
 list_students :-
-    writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
+    writeln('==========================================================='),
     writeln('           STUDENT ROSTER'),
-    writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
+    writeln('==========================================================='),
     findall((ID, Name), student(ID, Name), AllStudents),
     sort(AllStudents, Sorted),
     forall(member((ID, Name), Sorted),
            format('   ~w : ~w~n', [ID, Name])),
     length(Sorted, Count),
-    format('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━~n   Total: ~d students~n', [Count]),
-    nl.
-
-% List distinction students
-list_distinction :-
-    writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
-    writeln('     DISTINCTION STUDENTS (Avg > 80)'),
-    writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
-    findall((ID, Name, Avg), distinction_student(ID, Name, Avg), Distinction),
-    (   Distinction = []
-    ->  writeln('   No distinction students found.')
-    ;   forall(member((ID, Name, Avg), Distinction),
-               format('   ✓ ~w : ~w (Avg: ~.2f)~n', [ID, Name, Avg])),
-        length(Distinction, Count),
-        format('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━~n   Total: ~d students~n', [Count])
-    ),
+    format('===========================================================~n   Total: ~d students~n', [Count]),
     nl.
 
 % Show student's enrollments
-show_enrollments(StudentID) :-
-    student(StudentID, Name),
-    writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
-    format('     COURSES FOR ~w (~w)~n', [Name, StudentID]),
-    writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
-    findall((Code, Grade), grade(StudentID, Code, Grade), Courses),
-    (   Courses = []
-    ->  writeln('   No enrollments found.')
-    ;   forall(member((Code, Grade), Courses),
-               format('   ~w : ~d~n', [Code, Grade])),
-        student_average(StudentID, Avg),
-        format('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━~n   AVERAGE: ~.2f~n', [Avg])
-    ),
+show_enrollments :-
+    writeln('==========================================================='),
+    writeln('           ALL STUDENT ENROLLMENTS'),
+    writeln('==========================================================='),
+    forall(student(StudentID, Name),
+           (   format('~n    ~w (ID: ~w)~n', [Name, StudentID]),
+               findall((Code, Grade), grade(StudentID, Code, Grade), Courses),
+               (   Courses = []
+               ->  writeln('      No enrollments found.')
+               ;   forall(member((Code, Grade), Courses),
+                          format('       ~w: ~d~n', [Code, Grade])),
+                   student_average(StudentID, Avg),
+                   format('~n      AVERAGE: ~2f~n', [Avg])
+               )
+           )),
+    writeln('==========================================================='),
     nl.
 
-% Show recommendations for a student
-show_recommendations(StudentID) :-
-    student(StudentID, Name),
-    writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
-    format('     RECOMMENDED COURSES FOR ~w~n', [Name]),
-    writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
-    findall(Course, recommend(StudentID, Course), Recommendations),
-    (   Recommendations = []
-    ->  writeln('   No recommendations available.')
-    ;   forall(member(Course, Recommendations),
-               format('   → ~w~n', [Course]))
-    ),
+% Show recommendations for a student - NO DUPLICATES
+show_recommendations :-
+    writeln('==========================================================='),
+    writeln('         COURSE RECOMMENDATIONS FOR ALL STUDENTS'),
+    writeln('==========================================================='),
+    forall(student(StudentID, StudentName),
+           (   format('~n    ~w (ID: ~w):~n', [StudentName, StudentID]),
+               (   setof(Course, recommend(StudentID, Course), Recommendations)
+               ->  forall(member(Course, Recommendations),
+                          format('       ~w~n', [Course]))
+               ;   writeln('      No recommendations available.')
+               )
+           )),
+    writeln('==========================================================='),
     nl.
-
 % ----------------------------------------------------------------------
 % EXPORT TO CSV (For Haskell/Python)
 % ----------------------------------------------------------------------
@@ -272,9 +261,9 @@ export_to_csv :-
 % ----------------------------------------------------------------------
 demo :-
     writeln(''),
-    writeln('═══════════════════════════════════════════════════════════'),
+    writeln('==========================================================='),
     writeln('     UNIVERSITY MANAGEMENT SYSTEM - PROLOG + MYSQL'),
-    writeln('═══════════════════════════════════════════════════════════'),
+    writeln('==========================================================='),
     nl,
     
     % Connect and load data
@@ -287,48 +276,35 @@ demo :-
     ),
     
     % Display all students
-    list_students,
+    list_students,  
     
-    % Display distinction students
-    list_distinction,
+    % Show all student enrollments
+    show_enrollments,
     
-    % Show top student
-    writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
-    writeln('           TOP PERFORMING STUDENT'),
-    writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
-    (   top_student(TopID, TopName, TopAvg)
-    ->  format('    ~w (~w) - Average: ~.2f~n', [TopName, TopID, TopAvg])
-    ;   writeln('   No students found.')
-    ),
-    nl,
-    
-    % Show Alice's enrollments
-    show_enrollments('S1001'),
-    
-    % Show recommendations for Alice
-    show_recommendations('S1001'),
+    % Show recommendations for all
+    show_recommendations,
     
     % Check graduation eligibility
-    writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
+    writeln('==========================================================='),
     writeln('         GRADUATION ELIGIBILITY'),
-    writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
-    can_graduate('S1003'),  % Charlie
-    can_graduate('S1001'),  % Alice
-    can_graduate('S1002'),  % Bob
+    writeln('==========================================================='),
+    can_graduate('S1003'), nl,  
+    can_graduate('S1001'), nl,  
+    can_graduate('S1006'), 
     nl,
     
     % Export data for other languages
-    writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
+    writeln('==========================================================='),
     writeln('         EXPORT FOR HASKELL/PYTHON'),
-    writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'),
+    writeln('==========================================================='),
     export_to_csv,
     
     % Disconnect
     disconnect,
     
-    writeln('═══════════════════════════════════════════════════════════'),
+    writeln('==========================================================='),
     writeln('           DEMO COMPLETED SUCCESSFULLY'),
-    writeln('═══════════════════════════════════════════════════════════'),
+    writeln('==========================================================='),
     !.
 
 % ----------------------------------------------------------------------
@@ -347,30 +323,30 @@ test :-
     forall(student(ID, Name), format('   ~w: ~w~n', [ID, Name])),
     nl,
     
-    % 2. Bob's courses - DYNAMIC NAME FROM DATABASE ✓
+    % 2. courses - DYNAMIC NAME FROM DATABASE ✓
     StudentID = 'S1002',
-    student(StudentID, StudentName),  % ✅ GET NAME FROM DATABASE
+    student(StudentID, StudentName),  %  GET NAME FROM DATABASE
     format('2. ~w\'s courses:~n', [StudentName]),
     forall(grade(StudentID, Code, G), 
        format('   ~w: ~d~n', [Code, G])),
     nl,
     
-    % writeln('3. Is Bob eligible for CS201?'),
+
     StudentID = 'S1002',
     student(StudentID, StudentName),
     format('3. ~w\'s is eligible to graduate:~n', [StudentName]),
     (eligible('S1002', 'CS201') -> writeln('   YES') ; writeln('   NO')),
     nl,
     
-    % 4. Alice's average
+    % 4.average
     StudentID1 = 'S1001',
     student(StudentID1, StudentName1),
     format('4. ~w\'s average:~n', [StudentName1]),
     student_average(StudentID1, Avg),
 
     % OPTION 1: Show as integer (no decimals) - FIXED
-    RoundAvg is round(Avg),  % ✅ EVALUATE first
-    format('   ~d~n', [RoundAvg]),  % ✅ Now pass the result
+    RoundAvg is round(Avg),  %  EVALUATE first
+    format('   ~d~n', [RoundAvg]),  %  Now pass the result
 
     nl,
     
@@ -384,8 +360,6 @@ test :-
    writeln('  demo.  - Run complete demonstration'),
    writeln('  test.  - Run quick test'),
    writeln('  connect. - Connect to MySQL'),
-   writeln('  load_all. - Load data from MySQL'),
    writeln('  list_students. - Show all students'),
-   writeln('  list_distinction. - Show distinction students'),
    writeln('========================================'),
    nl.
