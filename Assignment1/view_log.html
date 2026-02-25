@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Management System - Log Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: #2d2d2d;
+            border-radius: 8px 8px 0 0;
+            padding: 20px;
+            border-bottom: 3px solid #007acc;
+        }
+        
+        .header h1 {
+            color: #fff;
+            font-size: 1.8em;
+        }
+        
+        .header p {
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        .controls {
+            background: #252526;
+            padding: 15px 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            border-bottom: 1px solid #3e3e42;
+        }
+        
+        .btn {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #1177bb;
+        }
+        
+        .btn-secondary {
+            background: #3e3e42;
+        }
+        
+        .btn-secondary:hover {
+            background: #4e4e52;
+        }
+        
+        .file-info {
+            margin-left: auto;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .log-container {
+            background: #1e1e1e;
+            border: 1px solid #3e3e42;
+            border-radius: 0 0 8px 8px;
+            padding: 20px;
+            overflow-x: auto;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .log-content {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .log-header {
+            color: #569cd6;
+            font-weight: bold;
+        }
+        
+        .log-success {
+            color: #6a9955;
+        }
+        
+        .log-error {
+            color: #f48771;
+        }
+        
+        .log-separator {
+            color: #808080;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .timestamp {
+            color: #808080;
+            font-size: 12px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 12px;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #666;
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 University Management System - Log Viewer</h1>
+            <p>Viewing analysis logs from Haskell + Prolog integration</p>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" onclick="loadLogFile()">🔄 Refresh</button>
+            <button class="btn btn-secondary" onclick="downloadLog()">📥 Download Log</button>
+            <button class="btn btn-secondary" onclick="clearLog()">🗑️ Clear</button>
+            <span class="file-info" id="fileInfo"></span>
+        </div>
+        
+        <div class="log-container" id="logContainer">
+            <pre class="log-content" id="logContent">Loading log file...</pre>
+        </div>
+        
+        <div class="footer">
+            <p>Log file: analysis_log.txt | Last updated: <span id="lastUpdated"></span></p>
+        </div>
+    </div>
+
+    <script>
+        const LOG_FILE = 'analysis_log.txt';
+        
+        async function loadLogFile() {
+            const logContent = document.getElementById('logContent');
+            const fileInfo = document.getElementById('fileInfo');
+            const lastUpdated = document.getElementById('lastUpdated');
+            
+            try {
+                // Try to fetch the log file
+                const response = await fetch(LOG_FILE);
+                
+                if (!response.ok) {
+                    throw new Error(`Log file not found (${response.status})`);
+                }
+                
+                const text = await response.text();
+                
+                // Colorize the log content
+                const colorized = colorizeLog(text);
+                logContent.innerHTML = colorized;
+                
+                // Update file info
+                const lines = text.split('\n').length;
+                const size = text.length;
+                fileInfo.textContent = `${lines} lines | ${size} bytes`;
+                
+                // Update timestamp
+                const now = new Date();
+                lastUpdated.textContent = now.toLocaleString();
+                
+            } catch (error) {
+                logContent.innerHTML = `
+                    <span class="log-error">❌ Error loading log file: ${error.message}</span>
+                    
+                    <br><br>
+                    <span class="log-header">📌 Instructions:</span>
+                    <br>
+                    1. First run: <strong>python run_analysis.py</strong> in your terminal
+                    <br>
+                    2. This will create the analysis_log.txt file
+                    <br>
+                    3. Then refresh this page
+                    
+                    <br><br>
+                    <span class="log-header">📁 Current directory files:</span>
+                `;
+                
+                // Try to list files in current directory
+                try {
+                    const files = await fetch('/api/files');
+                    if (files.ok) {
+                        const fileList = await files.json();
+                        logContent.innerHTML += '<br>' + fileList.join('<br>');
+                    }
+                } catch {
+                    // Ignore
+                }
+            }
+        }
+        
+        function colorizeLog(text) {
+            // Split into lines and process each
+            const lines = text.split('\n');
+            
+            return lines.map(line => {
+                // Empty line
+                if (line.trim() === '') return '<br>';
+                
+                // Headers/separators
+                if (line.includes('='.repeat(40))) {
+                    return `<span class="log-separator">${line}</span>`;
+                }
+                
+                // Success messages
+                if (line.includes('✓') || line.includes('successful') || line.includes('Found')) {
+                    return `<span class="log-success">${line}</span>`;
+                }
+                
+                // Error messages
+                if (line.includes('✗') || line.includes('failed') || line.includes('Error') || line.includes('Not found')) {
+                    return `<span class="log-error">${line}</span>`;
+                }
+                
+                // Headers
+                if (line.includes('HASKELL ANALYSIS') || line.includes('PROLOG ANALYSIS') || 
+                    line.includes('CSV EXPORT') || line.includes('SUMMARY')) {
+                    return `<span class="log-header">${line}</span>`;
+                }
+                
+                // Timestamps
+                if (line.match(/\d{4}-\d{2}-\d{2}/)) {
+                    return `<span class="timestamp">${line}</span>`;
+                }
+                
+                // Default
+                return line;
+            }).join('\n');
+        }
+        
+        function downloadLog() {
+            const logContent = document.getElementById('logContent').innerText;
+            const blob = new Blob([logContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `analysis_log_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        function clearLog() {
+            document.getElementById('logContent').innerHTML = 'Log cleared. Click Refresh to reload.';
+        }
+        
+        // Auto-refresh every 10 seconds
+        setInterval(loadLogFile, 10000);
+        
+        // Load on page start
+        window.addEventListener('DOMContentLoaded', loadLogFile);
+    </script>
+</body>
+</html>

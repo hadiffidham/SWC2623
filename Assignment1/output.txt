@@ -1,0 +1,92 @@
+
+============================================================
+UNIVERSITY MANAGEMENT SYSTEM - MULTI-LANGUAGE INTEGRATION
+============================================================
+
+This script integrates:
+  • Python - Main integration hub
+  • Haskell - Functional programming analysis
+  • Prolog - Logic programming & rule-based system
+
+------------------------------------------------------------
+CHECKING DEPENDENCIES
+------------------------------------------------------------
+✓ Haskell (runhaskell) found
+✓ SWI-Prolog found
+
+============================================================
+UNIVERSITY MANAGEMENT SYSTEM - PYTHON INTEGRATION HUB
+============================================================
+
+Current directory: C:\Users\User\Documents\UPTM\SWC2623\SWC2623
+Haskell files found: []
+Prolog files found: []
+
+============================================================
+INTEGRATING WITH HASKELL
+============================================================
+✗ Haskell file not found: studentGrade.hs
+  Looking in: C:\Users\User\Documents\UPTM\SWC2623\SWC2623
+  Available .hs files: []
+
+============================================================
+RUNNING PROLOG DEMO
+============================================================
+✓ Found existing CSV: students_export.csv
+✓ Parsed 26 enrollment records
+✓ Found 5 unique students
+
+============================================================
+INTEGRATING WITH PROLOG (Simple Queries)
+============================================================
+
+✓ Prolog data already loaded via CSV export
+  • Students: 5
+  • Enrollments: 26
+  • Graduation eligible: Faliq (S1006)
+
+============================================================
+COMBINED ANALYSIS (Python + Haskell + Prolog)
+============================================================
+
+1. Top Student Comparison:
+   Python: Hezry (ID: S1003) - Avg: 89.86
+   Haskell: No data available
+
+2. Distinction Students (Average > 80):
+   Python: 4 students
+     • Hadif Idham: 84.33
+     • Hezry: 89.86
+     • Hakimi: 86.60
+     • Faliq: 88.62
+   Haskell: No data available
+
+3. Data from Prolog:
+   Total enrollment records: 26
+   Hadif Idham (ID: S1001): 3 courses
+   Akmal (ID: S1002): 3 courses
+   Hezry (ID: S1003): 7 courses
+   Hakimi (ID: S1004): 5 courses
+   Faliq (ID: S1006): 8 courses
+
+------------------------------------------------------------
+EXPORTING DATA FOR OTHER LANGUAGES
+------------------------------------------------------------
+
+✓ Data exported to python_export.csv for Haskell
+   File location: C:\Users\User\Documents\UPTM\SWC2623\SWC2623\python_export.csv
+
+✓ Data exported to python_facts.pl for Prolog
+   File location: C:\Users\User\Documents\UPTM\SWC2623\SWC2623\python_facts.pl
+
+============================================================
+INTEGRATION COMPLETE
+============================================================
+
+Next steps:
+1. Run Haskell: runhaskell studentGrade.hs
+2. Run Prolog: swipl -s assignment.pro -t demo
+3. Or load the exported data:
+   - For Haskell: Use python_export.csv
+   - For Prolog: ['python_facts.pl'].
+============================================================

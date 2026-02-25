@@ -1,0 +1,180 @@
+================================================================================
+UNIVERSITY MANAGEMENT SYSTEM ANALYSIS LOG
+Generated: 2026-02-25 22:50:16
+================================================================================
+
+CHECKING FILES:
+----------------------------------------
+Haskell script (studentGrade.hs): [OK]
+Prolog script (assignment.pro): [OK]
+
+================================================================================
+HASKELL ANALYSIS
+================================================================================
+[OK] Haskell analysis successful
+
+--- Haskell Output ---
+=== Student Average Grades ===
+("S1001","Hadif Idham",84.33333333333333)
+("S1002","Akmal",79.66666666666667)
+("S1003","Hezry",89.85714285714286)
+("S1004","Hakimi",86.6)
+("S1006","Faliq",88.625)
+
+=== Distinction Students (Average > 80) ===
+("S1001","Hadif Idham",84.33333333333333)
+("S1003","Hezry",89.85714285714286)
+("S1004","Hakimi",86.6)
+("S1006","Faliq",88.625)
+
+=== Top Performing Student ===
+("S1003","Hezry",89.85714285714286)
+
+
+================================================================================
+PROLOG ANALYSIS
+================================================================================
+[OK] Prolog analysis successful
+
+--- Prolog Output ---
+========================================
+  PROLOG + MYSQL Ready!
+========================================
+Commands:
+  demo.  - Run complete demonstration
+  list_students. - Show all students
+========================================
+
+
+===========================================================
+     UNIVERSITY MANAGEMENT SYSTEM - PROLOG + MYSQL
+===========================================================
+
+Connecting to MySQL database...
+Connected to MySQL successfully!
+   Loading students...
+       Loaded 5 students
+   Loading enrollments...
+       Loaded 26 enrollment records
+   Loading prerequisites...
+       Loaded 7 prerequisite rules
+   Loading graduation requirements...
+       Loaded 8 graduation requirements
+All data loaded successfully!
+ System ready!
+
+===========================================================
+           STUDENT ROSTER
+===========================================================
+   S1001 : Hadif Idham
+   S1002 : Akmal
+   S1003 : Hezry
+   S1004 : Hakimi
+   S1006 : Faliq
+===========================================================
+   Total: 5 students
+
+===========================================================
+           ALL STUDENT ENROLLMENTS
+===========================================================
+
+    Hadif Idham (ID: S1001)
+       CS101: 85
+       CS102: 90
+       CS201: 78
+
+    Akmal (ID: S1002)
+       CS101: 76
+       CS102: 82
+       MA101: 81
+
+    Hezry (ID: S1003)
+       CS101: 92
+       CS102: 94
+       CS201: 96
+       CS202: 91
+       CS301: 89
+       MA101: 85
+       MA102: 82
+
+    Hakimi (ID: S1004)
+       CS101: 88
+       CS102: 84
+       MA101: 85
+       MA102: 86
+       CS201: 90
+
+    Faliq (ID: S1006)
+       CS101: 91
+       CS102: 89
+       CS201: 93
+       CS202: 88
+       CS301: 90
+       MA101: 87
+       MA102: 86
+       CS401: 85
+===========================================================
+
+===========================================================
+         COURSE RECOMMENDATIONS FOR ALL STUDENTS
+===========================================================
+
+    Hadif Idham (ID: S1001):
+       CS202
+       CS301
+       MA101
+
+    Akmal (ID: S1002):
+       CS201
+       CS202
+       MA102
+
+    Hezry (ID: S1003):
+       CS401
+
+    Hakimi (ID: S1004):
+       CS202
+       CS301
+
+    Faliq (ID: S1006):
+      No recommendations available.
+===========================================================
+
+         GRADUATION ELIGIBILITY
+     Hezry (S1003) is NOT eligible for graduation
+      Missing: [CS401]
+
+     Hadif Idham (S1001) is NOT eligible for graduation
+      Missing: [CS202,CS301,CS401,MA101,MA102]
+
+     Faliq (S1006) is ELIGIBLE for graduation!
+
+
+Disconnected from MySQL.
+===========================================================
+           DEMO COMPLETED SUCCESSFULLY
+===========================================================
+
+
+================================================================================
+CSV EXPORT CHECK
+================================================================================
+[OK] CSV file found: students_export.csv
+  Size: 638 bytes
+
+--- CSV Preview (first 5 lines) ---
+student_id,student_name,course_code,grade
+S1001,Hadif Idham,CS101,85
+S1001,Hadif Idham,CS102,90
+S1001,Hadif Idham,CS201,78
+S1002,Akmal,CS101,76
+
+================================================================================
+SUMMARY
+================================================================================
+Analysis complete!
+Timestamp: 2026-02-25 22:50:16
+
+================================================================================
+END OF LOG
+================================================================================
