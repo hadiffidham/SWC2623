@@ -11,6 +11,21 @@ import os
 import sys
 from typing import List, Dict, Tuple, Optional
 
+# ===== ADD THIS FOR TXT OUTPUT =====
+class Tee:
+    def __init__(self,*files):
+        self.files=files
+    def write(self,obj):
+        for f in self.files:
+            f.write(obj)
+            f.flush()
+    def flush(self):
+        for f in self.files:
+            f.flush()
+
+log_file=open("output.txt","w",encoding="utf-8")
+sys.stdout=Tee(sys.stdout,log_file)
+
 # ============================================================================
 # CONFIGURATION - FIXED FILE NAMES TO MATCH YOUR ACTUAL FILES
 # ============================================================================
@@ -543,3 +558,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    log_file.close()
