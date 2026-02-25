@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>University System Output</title>
+
+<style>
+body{
+background:#0d1117;
+color:#00ffcc;
+font-family:consolas;
+padding:40px;
+}
+.box{
+background:black;
+border:2px solid #00ffcc;
+padding:20px;
+border-radius:12px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🎓 University Management System Output</h2>
+
+<div class="box">
+<pre id="output">Loading output...</pre>
+</div>
+
+<script>
+fetch("output.txt")
+.then(response => response.text())
+.then(data => {
+document.getElementById("output").textContent = data;
+});
+</script>
+
+</body>
+</html>

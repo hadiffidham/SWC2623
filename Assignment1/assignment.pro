@@ -218,9 +218,9 @@ show_enrollments :-
                (   Courses = []
                ->  writeln('      No enrollments found.')
                ;   forall(member((Code, Grade), Courses),
-                          format('       ~w: ~d~n', [Code, Grade])),
-                   student_average(StudentID, Avg),
-                   format('~n      AVERAGE: ~2f~n', [Avg])
+                          format('       ~w: ~d~n', [Code, Grade]))
+                   % student_average(StudentID, Avg),
+                  % format('~n      AVERAGE: ~2f~n', [Avg])
                )
            )),
     writeln('==========================================================='),
@@ -285,18 +285,18 @@ demo :-
     show_recommendations,
     
     % Check graduation eligibility
-    writeln('==========================================================='),
+   % writeln('==========================================================='),
     writeln('         GRADUATION ELIGIBILITY'),
-    writeln('==========================================================='),
+   % writeln('==========================================================='),
     can_graduate('S1003'), nl,  
     can_graduate('S1001'), nl,  
     can_graduate('S1006'), 
     nl,
     
     % Export data for other languages
-    writeln('==========================================================='),
-    writeln('         EXPORT FOR HASKELL/PYTHON'),
-    writeln('==========================================================='),
+    %writeln('==========================================================='),
+   % writeln('         EXPORT FOR HASKELL/PYTHON'),
+  %  writeln('==========================================================='),
     export_to_csv,
     
     % Disconnect
@@ -358,8 +358,8 @@ test :-
    writeln('========================================'),
    writeln('Commands:'),
    writeln('  demo.  - Run complete demonstration'),
-   writeln('  test.  - Run quick test'),
-   writeln('  connect. - Connect to MySQL'),
+   %writeln('  test.  - Run quick test'),
+   %writeln('  connect. - Connect to MySQL'),
    writeln('  list_students. - Show all students'),
    writeln('========================================'),
    nl.

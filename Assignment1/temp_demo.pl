@@ -1,0 +1,2 @@
+:- [assignment.pro].
+:- demo, halt.
