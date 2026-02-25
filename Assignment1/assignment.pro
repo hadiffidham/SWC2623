@@ -285,9 +285,9 @@ demo :-
     show_recommendations,
     
     % Check graduation eligibility
-    writeln('==========================================================='),
+   % writeln('==========================================================='),
     writeln('         GRADUATION ELIGIBILITY'),
-    writeln('==========================================================='),
+   % writeln('==========================================================='),
     can_graduate('S1003'), nl,  
     can_graduate('S1001'), nl,  
     can_graduate('S1006'), 
