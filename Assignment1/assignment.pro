@@ -218,9 +218,9 @@ show_enrollments :-
                (   Courses = []
                ->  writeln('      No enrollments found.')
                ;   forall(member((Code, Grade), Courses),
-                          format('       ~w: ~d~n', [Code, Grade])),
-                   student_average(StudentID, Avg),
-                   format('~n      AVERAGE: ~2f~n', [Avg])
+                          format('       ~w: ~d~n', [Code, Grade]))
+                   % student_average(StudentID, Avg),
+                  % format('~n      AVERAGE: ~2f~n', [Avg])
                )
            )),
     writeln('==========================================================='),
@@ -294,9 +294,9 @@ demo :-
     nl,
     
     % Export data for other languages
-    writeln('==========================================================='),
-    writeln('         EXPORT FOR HASKELL/PYTHON'),
-    writeln('==========================================================='),
+    %writeln('==========================================================='),
+   % writeln('         EXPORT FOR HASKELL/PYTHON'),
+  %  writeln('==========================================================='),
     export_to_csv,
     
     % Disconnect
