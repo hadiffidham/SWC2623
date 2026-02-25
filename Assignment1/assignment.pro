@@ -253,7 +253,7 @@ export_to_csv :-
            (student(SID, Name),
             format('~w,~w,~w,~w~n', [SID, Name, Code, Grade]))),
     told,
-    writeln('  Data exported to students_export.csv for Haskell/Python'),
+    %writeln('  Data exported to students_export.csv for Haskell/Python'),
     nl.
 
 % ----------------------------------------------------------------------
