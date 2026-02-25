@@ -358,8 +358,8 @@ test :-
    writeln('========================================'),
    writeln('Commands:'),
    writeln('  demo.  - Run complete demonstration'),
-   writeln('  test.  - Run quick test'),
-   writeln('  connect. - Connect to MySQL'),
+   %writeln('  test.  - Run quick test'),
+   %writeln('  connect. - Connect to MySQL'),
    writeln('  list_students. - Show all students'),
    writeln('========================================'),
    nl.
