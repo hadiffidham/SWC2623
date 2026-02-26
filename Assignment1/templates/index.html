@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>University Management System</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f4f6f9;
+            padding: 40px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .student {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>University Management System</h1>
+
+<div class="card">
+    <h2>🏆 Python Top Student</h2>
+    {% if results.python_top %}
+        <p>
+            {{ results.python_top.name }}
+            ({{ results.python_top.id }})
+            - Average: {{ results.python_top.average }}
+        </p>
+    {% else %}
+        <p>No Data</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>🏆 Haskell Top Student</h2>
+    {% if results.haskell_top %}
+        <p>
+            {{ results.haskell_top.name }}
+            ({{ results.haskell_top.id }})
+            - Average: {{ results.haskell_top.average }}
+        </p>
+    {% else %}
+        <p>No Haskell Data Available</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>🎓 Python Distinction Students</h2>
+    {% if results.python_distinction %}
+        <ul>
+        {% for s in results.python_distinction %}
+            <li class="student">
+                {{ s.name }} ({{ s.id }}) - {{ s.average }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No distinction students</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>🎓 Haskell Distinction Students</h2>
+    {% if results.haskell_distinction %}
+        <ul>
+        {% for s in results.haskell_distinction %}
+            <li class="student">
+                {{ s.name }} ({{ s.id }}) - {{ s.average }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No Haskell distinction data</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>📚 Prolog Demo Output</h2>
+    <pre>{{ results.prolog_raw_output }}</pre>
+</div>
+
+</body>
+</html>
